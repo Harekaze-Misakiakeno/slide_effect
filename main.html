@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Use JQ to implement slide effect</title>
+    <script type="text/javascript" src="jquery-3.3.1.min.js"></script>
+    <style type="text/css">
+        *{margin:0;padding:0;}
+        body{background-color:#f0f0f0;}
+        .main{margin:0 auto;height:1000px;width:1000px;background:#ffffff;}
+        /**/
+        #slide_effect{width:1000px;height:400px;overflow:hidden;position:absolute;}
+        #slide_effect ul{height:400px;position:absolute;}
+        #slide_effect ul li{list-style:none;float:left;width:1000px;height:400px;overflow:hidden;position:relative;background:#000;}
+        #slide_effect img{border:0;width:1000px;height:400px;overflow:hidden;}
+        #slide_effect ul li div{position:absolute;overflow:hidden;}
+        /*#slide_effect .background_bar{position:absolute;width:1000px;height:30px;left:0;bottom:0;background:#000;opacity:0.5;}下方背景条*/
+        #slide_effect .move_button{position:absolute;width:980px;height:20px;padding:5px 10px;right:0;bottom:0;text-align:right;z-index:1;}/*下方按钮条*/
+        /*#slide_effect .move_button span{display:inline-block;width:25px;height:10px;margin-left:5px;cursor:pointer;background:#fff;}矩形*/
+        #slide_effect .move_button span{display:inline-block;width:20px;height:20px;border:#666666 solid 2px;border-radius:15px; margin-left:5px;cursor:pointer;background:#ffffff;position:relative;right:370px;bottom: 5px;}
+        /*圆形*/
+        #slide_effect .move_button .move_button_color{background: red;width:24px;height:24px;border:none;}/*圆形 hover*/
+        #slide_effect .press_button{width:45px;height:100px;position:absolute;top:125px;background:url(img/7.png) no-repeat 0 0;cursor:pointer;}
+        #slide_effect .press_button_left{left:0;}
+        #slide_effect .press_button_right{right:0;background-position:right top;}
+    </style>
+    <script type="text/javascript">
+        $(function(){
+            var widths = $('#slide_effect').width();//图片宽度
+            var lengths = $('#slide_effect ul li').length; //图片个数
+            var index = 0;
+            var times = 0;
+            $("#slide_effect ul").css("width",widths*(lengths));
+            //下方背条及左右按钮
+            var buttons = "<div class='background_bar'></div>";//背景条
+            buttons +="<div class='move_button'>";//下方按钮
+            for(var i=0; i < lengths; i++) {
+                buttons += "<span></span>";
+            }
+            buttons += "</div>";
+            buttons += "<div class='press_button press_button_left'></div><div class='press_button press_button_right'></div>";//左右按钮
+            $("#slide_effect").append(buttons);
+            //下按钮 over
+            $("#slide_effect .move_button span").mouseover(function() {//.css("opacity",0.4)
+                    index = $("#slide_effect .move_button span").index(this);
+                    showpictures(index);
+                }).eq(0).trigger("mouseover");//默认效果
+            //左按钮
+            $("#slide_effect .press_button_left").click(function() {
+                index -= 1;
+                if(index == -1) {index = lengths - 1;}
+                showpictures(index);
+            });
+            //右按钮
+            $("#slide_effect .press_button_right").click(function() {
+                index += 1;
+                if(index == lengths) {index = 0;}
+                showpictures(index);
+            });
+            //左右按钮明暗处理
+            $("#slide_effect .press_button").css("opacity",0.2).hover(function() {
+                $(this).stop(true,false).animate({"opacity":"0.5"},300);
+            },function() {
+                $(this).stop(true,false).animate({"opacity":"0.2"},300);
+            });
+            //下按钮
+            $("#slide_effect").hover(function() {
+                clearInterval(times);
+            },function() {
+                console.log(times);
+                times = setInterval(function() {
+                    index++;
+                    showpictures(index);
+                    if(index == lengths) {index = 0;}
+                },1000);
+            }).trigger("mouseleave");
+            //切换
+            function showpictures(index) {
+                var nowleft = -index*widths; //根据index值计算ul元素的left值
+                $("#slide_effect ul").stop(true,false).animate({"left":nowleft},300); //通过animate()调整ul元素滚动到计算出的position
+                //为当前的按钮切换到选中的效果
+                // $("#slide_effect .move_button span").stop(true,false).animate({"opacity":"0.4"},300).eq(index).stop(true,false).animate({"opacity":"1"},300); //矩形
+                $("#slide_effect .move_button span").stop(true,false).removeClass('move_button_color').eq(index).stop(true,false).addClass('move_button_color');//圆形
+            }//为当前的按钮切换到选中的效果
+        });
+    </script>
+</head>
+<body>
+    <div class="main">
+        <div id="slide_effect">
+            <ul>
+                <li><a href="#"><img src="img/0.png"/></a></li>
+                <li><a href="#"><img src="img/1.png"/></a></li>
+                <li><a href="#"><img src="img/2.png"/></a></li>
+                <li><a href="#"><img src="img/3.png"/></a></li>
+                <li><a href="#"><img src="img/4.png"/></a></li>
+                <li><a href="#"><img src="img/5.png"/></a></li>
+                <li><a href="#"><img src="img/6.png"/></a></li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html>
