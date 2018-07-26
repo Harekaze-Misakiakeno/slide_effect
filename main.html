@@ -28,7 +28,7 @@
         $(function(){
             var widths = $('#slide_effect').width();//图片宽度
             var lengths = $('#slide_effect ul li').length; //图片个数
-            var index = 0;
+            var index = 1;
             var times = 0;
             $("#slide_effect ul").css("width",widths*(lengths));
             //下方背条及左右按钮
@@ -69,8 +69,8 @@
             },function() {
                 console.log(times);
                 times = setInterval(function() {
-                    index++;
                     showpictures(index);
+                    index++;
                     if(index == lengths) {index = 0;}
                 },1000);
             }).trigger("mouseleave");
