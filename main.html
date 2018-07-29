@@ -26,10 +26,10 @@
         /*#slide_effect .move_button .move_button_color{background: red;width:24px;height:24px;border:none;}*/
         /*按钮*/
         #slide_effect .press_button{width:45px;height:100px;position:absolute;top:125px;background:url(img/7.png) no-repeat 0 0;cursor:pointer;}
-        #slide_effect .press_button_left{left:0;}
-        #slide_effect .press_button_right{right:0;background-position:right top;}
+        #slide_effect .press_button_left{left:0;display:none;}
+        #slide_effect .press_button_right{right:0;background-position:right top;display:none;}
         /*标题*/
-        #slide_effect_content{height:30px;overflow:hidden;position: relative;}
+        #slide_effect_content{height:30px;overflow:hidden;position:relative;}
         #slide_effect_content li{list-style:none;display:block;float:left;width:960px;padding:3px 20px;position:relative;z-index: 10;color:#ffffff;background:none;}
     </style>
     <script type="text/javascript">
@@ -76,7 +76,9 @@
             //下按钮
             $("#slide_effect").hover(function() {
                 clearInterval(times);
+                $('#slide_effect .press_button_left').css({'display':'block',}).next().css({'display':'block',})//只有在hover是显示左右按钮
             },function() {
+                $('#slide_effect .press_button_left').css({'display':'none',}).next().css({'display':'none',})
                 times = setInterval(function() {
                     if(n==0){index++;n++;if(index==7){index--;}}
                     showpictures(index);
